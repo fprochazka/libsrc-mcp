@@ -1,0 +1,13 @@
+[Unit]
+Description=libsrc - Library Source Code MCP Server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/libsrc serve
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target
