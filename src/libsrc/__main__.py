@@ -1,5 +1,4 @@
 import argparse
-import sys
 
 from libsrc.config import load_config
 
@@ -21,8 +20,16 @@ def main() -> None:
         server.run(transport="streamable-http", host=config.host, port=config.port)
 
     elif args.command == "cleanup":
-        print("Cleanup not yet implemented")
-        sys.exit(0)
+        from libsrc.worktree_tracker import WorktreeTracker
+
+        tracker = WorktreeTracker()
+        removed = tracker.cleanup()
+        if removed:
+            for p in removed:
+                print(f"Removed: {p}")
+            print(f"Cleaned up {len(removed)} worktree(s)")
+        else:
+            print("No expired worktrees to clean up")
 
 
 if __name__ == "__main__":
