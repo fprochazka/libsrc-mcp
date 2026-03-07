@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "libsrc"
+version = "0.1.0"
+description = "MCP server for resolving project dependencies and providing local source code paths"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=3.1.0",
+    "pyyaml",
+    "httpx",
+]
+
+[project.scripts]
+libsrc = "libsrc.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/libsrc"]
+
+[tool.uv]
+dev-dependencies = ["pytest", "pytest-asyncio"]
