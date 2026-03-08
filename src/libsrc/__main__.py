@@ -25,6 +25,7 @@ def main() -> None:
             level=logging.INFO,
             format="%(asctime)s %(levelname)s %(name)s: %(message)s",
         )
+        logging.getLogger("httpx").setLevel(logging.WARNING)
 
         config = load_config()
         if args.port is not None:
@@ -41,7 +42,8 @@ def main() -> None:
         from libsrc.server import create_server
 
         server = create_server(config)
-        server.run(transport="streamable-http", host=config.host, port=config.port)
+        logger.info("Starting libsrc MCP server on http://%s:%d/mcp", config.host, config.port)
+        server.run(transport="streamable-http", host=config.host, port=config.port, show_banner=False)
 
     elif args.command == "cleanup":
         logging.basicConfig(
