@@ -21,10 +21,10 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.command == "serve":
-        logging.basicConfig(
-            level=logging.INFO,
-            format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        )
+        from fastmcp.utilities.logging import configure_logging
+
+        # Use FastMCP's rich logging for all loggers (root, uvicorn, ours)
+        configure_logging(level="INFO", logger=logging.getLogger())
         logging.getLogger("httpx").setLevel(logging.WARNING)
 
         config = load_config()
