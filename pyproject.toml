@@ -3,18 +3,35 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "libsrc"
+name = "libsrc-mcp"
 version = "0.1.0"
 description = "MCP server for resolving project dependencies and providing local source code paths"
+readme = "README.md"
+license = "MIT"
 requires-python = ">=3.11"
+authors = [{ name = "Filip Procházka", email = "mr@fprochazka.cz" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
 dependencies = [
     "fastmcp>=3.1.0",
     "pyyaml",
     "httpx",
 ]
 
+[project.urls]
+Homepage = "https://github.com/fprochazka/libsrc-mcp"
+Repository = "https://github.com/fprochazka/libsrc-mcp"
+Issues = "https://github.com/fprochazka/libsrc-mcp/issues"
+
 [project.scripts]
-libsrc = "libsrc.__main__:main"
+libsrc-mcp = "libsrc.__main__:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/libsrc"]

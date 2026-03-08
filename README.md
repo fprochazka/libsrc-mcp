@@ -13,22 +13,22 @@ Plain pip / `requirements.txt` is not supported (no reliable version resolution 
 
 ```bash
 # Install as a tool
-uv tool install libsrc
+uv tool install libsrc-mcp
 
 # Or run directly without installing
-uvx libsrc serve
+uvx libsrc-mcp serve
 
 # Auto-register in detected AI coding tools
-libsrc install
+libsrc-mcp install
 ```
 
 ### Auto-install into AI tools
 
-`libsrc install` detects installed AI coding tools and adds the MCP server to their configs. Supported: Claude Code, Cursor, Windsurf, Codex CLI, Gemini CLI, JetBrains Junie, VS Code Copilot. Skips tools that aren't installed or already configured.
+`libsrc-mcp install` detects installed AI coding tools and adds the MCP server to their configs. Supported: Claude Code, Cursor, Windsurf, Codex CLI, Gemini CLI, JetBrains Junie, VS Code Copilot. Skips tools that aren't installed or already configured.
 
 ```bash
-libsrc install
-libsrc install --port 8080  # if using a non-default port
+libsrc-mcp install
+libsrc-mcp install --port 8080  # if using a non-default port
 ```
 
 ## Configuration
@@ -56,17 +56,17 @@ deps_dev_cache_ttl: 24
 ### Start the server
 
 ```bash
-libsrc serve
-libsrc serve --port 8080
+libsrc-mcp serve
+libsrc-mcp serve --port 8080
 ```
 
 ### Systemd service (Linux)
 
 ```bash
 mkdir -p ~/.config/systemd/user
-cp systemd/libsrc.service ~/.config/systemd/user/
+cp systemd/libsrc-mcp.service ~/.config/systemd/user/
 systemctl --user daemon-reload
-systemctl --user enable --now libsrc
+systemctl --user enable --now libsrc-mcp
 ```
 
 ### Worktree cleanup
@@ -74,7 +74,7 @@ systemctl --user enable --now libsrc
 Worktrees not accessed for 7+ days are cleaned up automatically on server startup. Manual cleanup:
 
 ```bash
-libsrc cleanup
+libsrc-mcp cleanup
 ```
 
 ## MCP Tool: `get_library_sources`

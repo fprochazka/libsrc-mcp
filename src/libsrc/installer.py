@@ -141,7 +141,7 @@ def _install_codex(url: str) -> None:
 
 def install_mcp(url: str) -> None:
     """Detect installed AI tools and add libsrc MCP server to their configs."""
-    print(f"Installing libsrc MCP server ({url})...\n")
+    print(f"Installing libsrc-mcp MCP server ({url})...\n")
 
     _install_claude_code(url)
     _install_cursor(url)

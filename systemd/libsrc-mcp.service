@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=%h/.local/bin/libsrc serve
+ExecStart=%h/.local/bin/libsrc-mcp serve
 Restart=on-failure
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1
