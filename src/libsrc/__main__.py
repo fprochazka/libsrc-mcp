@@ -23,12 +23,14 @@ def main() -> None:
     if args.command == "serve":
         from fastmcp.utilities.logging import configure_logging
 
-        # Use FastMCP's rich logging for all loggers (root, uvicorn, ours)
+        # Use FastMCP's rich logging for all loggers
         configure_logging(level="INFO", logger=logging.getLogger())
-        configure_logging(level="INFO", logger=logging.getLogger("uvicorn"))
-        configure_logging(level="INFO", logger=logging.getLogger("uvicorn.error"))
-        configure_logging(level="INFO", logger=logging.getLogger("uvicorn.access"))
         logging.getLogger("httpx").setLevel(logging.WARNING)
+        # Route uvicorn through root logger (rich handler) instead of its own
+        for uv_name in ("uvicorn", "uvicorn.error", "uvicorn.access"):
+            uv_logger = logging.getLogger(uv_name)
+            uv_logger.handlers.clear()
+            uv_logger.propagate = True
 
         config = load_config()
         if args.port is not None:
@@ -45,9 +47,17 @@ def main() -> None:
         from libsrc.server import create_server
 
         server = create_server(config)
-        logger.info("Starting libsrc MCP server on http://%s:%d/mcp", config.host, config.port)
         try:
-            server.run(transport="streamable-http", host=config.host, port=config.port, show_banner=False)
+            server.run(
+                transport="streamable-http",
+                host=config.host,
+                port=config.port,
+                show_banner=False,
+                uvicorn_config={
+                    "log_config": None,  # prevent uvicorn from overriding our logging
+                    "timeout_graceful_shutdown": 1,
+                },
+            )
         except KeyboardInterrupt:
             pass
 
