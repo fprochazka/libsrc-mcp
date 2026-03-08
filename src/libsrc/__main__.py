@@ -18,6 +18,12 @@ def main() -> None:
 
     subparsers.add_parser("cleanup", help="Run worktree cleanup")
 
+    install_parser = subparsers.add_parser("install", help="Install libsrc into AI coding tools")
+    install_parser.add_argument(
+        "--port", type=int, default=None,
+        help="Port the server runs on (default: from config or 7890)",
+    )
+
     args = parser.parse_args()
 
     if args.command == "serve":
@@ -89,6 +95,14 @@ def main() -> None:
             print(f"Cleaned up {len(removed)} worktree(s)")
         else:
             print("No expired worktrees to clean up")
+
+    elif args.command == "install":
+        config = load_config()
+        port = args.port or config.port
+        url = f"http://127.0.0.1:{port}/mcp"
+        from libsrc.installer import install_mcp
+
+        install_mcp(url)
 
 
 if __name__ == "__main__":
