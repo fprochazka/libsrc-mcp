@@ -55,7 +55,7 @@ def _install_claude_code(url: str) -> None:
         config_path=Path("~/.claude.json").expanduser(),
         detect_path=Path("~/.claude.json").expanduser(),
         root_key="mcpServers",
-        entry={"type": "streamable-http", "url": url},
+        entry={"type": "http", "url": url},
     )
 
 
