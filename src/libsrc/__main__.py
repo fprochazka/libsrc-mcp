@@ -43,7 +43,10 @@ def main() -> None:
 
         server = create_server(config)
         logger.info("Starting libsrc MCP server on http://%s:%d/mcp", config.host, config.port)
-        server.run(transport="streamable-http", host=config.host, port=config.port, show_banner=False)
+        try:
+            server.run(transport="streamable-http", host=config.host, port=config.port, show_banner=False)
+        except KeyboardInterrupt:
+            pass
 
     elif args.command == "cleanup":
         logging.basicConfig(
