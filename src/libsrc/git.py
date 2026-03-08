@@ -148,12 +148,17 @@ class GitManager:
 
         return worktree_path
 
+    # Well-known release qualifiers that some projects (e.g. Hibernate, Spring)
+    # append to Maven/Gradle version strings but omit from git tags.
+    _RELEASE_QUALIFIERS = (".Final", ".RELEASE", ".GA", "-Final", "-RELEASE", "-GA")
+
     def _find_best_tag(
         self, clone_path: Path, version: str, artifact_id: str | None = None
     ) -> str | None:
         """Find the best matching git tag for a version string.
 
-        Check patterns in order:
+        Check patterns in order (first with the original version, then with
+        well-known release qualifiers like .Final / .RELEASE / .GA stripped):
         1. Exact: v{version}
         2. Exact: {version}
         3. Exact: release-{version}
@@ -180,36 +185,46 @@ class GitManager:
             logger.debug("No tags found in %s", clone_path)
             return None
 
+        # Build list of version strings to try: original first, then with
+        # release qualifiers stripped (e.g. "6.6.39.Final" -> "6.6.39").
+        versions_to_try = [version]
+        for qualifier in self._RELEASE_QUALIFIERS:
+            if version.endswith(qualifier):
+                stripped = version[: -len(qualifier)]
+                if stripped and stripped not in versions_to_try:
+                    versions_to_try.append(stripped)
+
         tag_set = set(all_tags)
 
-        # 1-4: Exact matches in priority order
-        exact_candidates = [
-            f"v{version}",
-            version,
-            f"release-{version}",
-        ]
-        if artifact_id:
-            exact_candidates.append(f"{artifact_id}-{version}")
+        for ver in versions_to_try:
+            # 1-4: Exact matches in priority order
+            exact_candidates = [
+                f"v{ver}",
+                ver,
+                f"release-{ver}",
+            ]
+            if artifact_id:
+                exact_candidates.append(f"{artifact_id}-{ver}")
 
-        for candidate in exact_candidates:
-            if candidate in tag_set:
-                logger.debug("Found exact tag match: %s", candidate)
-                return candidate
+            for candidate in exact_candidates:
+                if candidate in tag_set:
+                    logger.debug("Found exact tag match: %s", candidate)
+                    return candidate
 
-        # 5: Any tag ending with the version string
-        suffix_matches = [t for t in all_tags if t.endswith(version)]
-        if suffix_matches:
-            # Prefer shorter tags (closer match)
-            suffix_matches.sort(key=len)
-            logger.debug("Found suffix tag match: %s", suffix_matches[0])
-            return suffix_matches[0]
+            # 5: Any tag ending with the version string
+            suffix_matches = [t for t in all_tags if t.endswith(ver)]
+            if suffix_matches:
+                # Prefer shorter tags (closer match)
+                suffix_matches.sort(key=len)
+                logger.debug("Found suffix tag match: %s", suffix_matches[0])
+                return suffix_matches[0]
 
-        # 6: Any tag containing the version string
-        contains_matches = [t for t in all_tags if version in t]
-        if contains_matches:
-            # Prefer shorter tags (closer match)
-            contains_matches.sort(key=len)
-            logger.debug("Found contains tag match: %s", contains_matches[0])
-            return contains_matches[0]
+            # 6: Any tag containing the version string
+            contains_matches = [t for t in all_tags if ver in t]
+            if contains_matches:
+                # Prefer shorter tags (closer match)
+                contains_matches.sort(key=len)
+                logger.debug("Found contains tag match: %s", contains_matches[0])
+                return contains_matches[0]
 
         return None
