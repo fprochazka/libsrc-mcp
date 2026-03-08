@@ -19,5 +19,5 @@ libsrc = "libsrc.__main__:main"
 [tool.hatch.build.targets.wheel]
 packages = ["src/libsrc"]
 
-[tool.uv]
-dev-dependencies = ["pytest", "pytest-asyncio"]
+[dependency-groups]
+dev = ["pytest", "pytest-asyncio"]
