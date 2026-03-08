@@ -21,12 +21,16 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.command == "serve":
-        from fastmcp.utilities.logging import configure_logging
+        import fastmcp
 
-        # Use FastMCP's rich logging for all loggers
-        configure_logging(level="INFO", logger=logging.getLogger())
+        # Disable FastMCP's rich logging — we use a single plain format for everything
+        fastmcp.settings.enable_rich_logging = False
+        fastmcp.settings.log_enabled = False
+
+        _log_format = "%(asctime)s %(levelname)-5s %(name)s: %(message)s"
+        logging.basicConfig(level=logging.INFO, format=_log_format)
         logging.getLogger("httpx").setLevel(logging.WARNING)
-        # Route uvicorn through root logger (rich handler) instead of its own
+        # Route uvicorn through root logger instead of its own handlers
         for uv_name in ("uvicorn", "uvicorn.error", "uvicorn.access"):
             uv_logger = logging.getLogger(uv_name)
             uv_logger.handlers.clear()
