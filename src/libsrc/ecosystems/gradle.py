@@ -13,7 +13,12 @@ logger = logging.getLogger(__name__)
 _SKIP_DIRS = {".gradle", "build", ".git", "node_modules", ".idea"}
 
 # File names to discover
-_BUILD_FILES = {"build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"}
+_BUILD_FILES = {
+    "build.gradle",
+    "build.gradle.kts",
+    "settings.gradle",
+    "settings.gradle.kts",
+}
 
 
 class GradleEcosystem(Ecosystem):
@@ -101,9 +106,9 @@ class GradleEcosystem(Ecosystem):
         # Groups: (indent_chars)(group:name:requested_version)(optional -> resolved_version)(optional markers)
         dep_pattern = re.compile(
             r"^([\s|]*)[+\\]--- "  # indentation + branch marker
-            r"(\S+)"               # group:name or group:name:version
-            r"(?: -> (\S+))?"      # optional version override
-            r"(?: \(.*\))?"        # optional markers like (*), (c), (n)
+            r"(\S+)"  # group:name or group:name:version
+            r"(?: -> (\S+))?"  # optional version override
+            r"(?: \(.*\))?"  # optional markers like (*), (c), (n)
             r"\s*$"
         )
 

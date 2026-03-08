@@ -45,7 +45,7 @@ class MavenEcosystem(Ecosystem):
             proc = await asyncio.create_subprocess_exec(
                 wrapper,
                 "dependency:tree",
-                f"-DoutputType=json",
+                "-DoutputType=json",
                 f"-DoutputFile={tmpfile}",
                 "-DappendOutput=true",
                 cwd=str(project_dir),

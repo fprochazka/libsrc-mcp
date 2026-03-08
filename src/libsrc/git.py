@@ -1,5 +1,4 @@
 import asyncio
-import contextlib
 import fcntl
 import logging
 import subprocess
@@ -69,7 +68,12 @@ class GitManager:
             if clone_path.is_dir() and (clone_path / ".git").exists():
                 logger.info("Fetching updates for %s", repo_url)
                 proc = await asyncio.create_subprocess_exec(
-                    "git", "-C", str(clone_path), "fetch", "--all", "--tags",
+                    "git",
+                    "-C",
+                    str(clone_path),
+                    "fetch",
+                    "--all",
+                    "--tags",
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
                 )
@@ -77,20 +81,30 @@ class GitManager:
                 if proc.returncode != 0:
                     logger.warning(
                         "git fetch failed for %s (rc=%d): %s",
-                        clone_path, proc.returncode, stderr.decode().strip(),
+                        clone_path,
+                        proc.returncode,
+                        stderr.decode().strip(),
                     )
             else:
                 logger.info("Cloning %s into %s", repo_url, clone_path)
                 clone_path.parent.mkdir(parents=True, exist_ok=True)
                 proc = await asyncio.create_subprocess_exec(
-                    "git", "clone", repo_url, str(clone_path),
+                    "git",
+                    "clone",
+                    repo_url,
+                    str(clone_path),
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
                 )
                 stdout, stderr = await proc.communicate()
                 if proc.returncode != 0:
                     msg = stderr.decode().strip()
-                    logger.error("git clone failed for %s (rc=%d): %s", repo_url, proc.returncode, msg)
+                    logger.error(
+                        "git clone failed for %s (rc=%d): %s",
+                        repo_url,
+                        proc.returncode,
+                        msg,
+                    )
                     raise RuntimeError(f"git clone failed: {msg}")
 
         return clone_path
@@ -114,7 +128,9 @@ class GitManager:
         tag = self._find_best_tag(clone_path, version, artifact_id)
         if tag is None:
             logger.warning(
-                "No matching tag found for version %s in %s", version, clone_path,
+                "No matching tag found for version %s in %s",
+                version,
+                clone_path,
             )
             return None
 
@@ -129,8 +145,14 @@ class GitManager:
             logger.info("Creating worktree at %s for tag %s", worktree_path, tag)
 
             proc = await asyncio.create_subprocess_exec(
-                "git", "-C", str(clone_path),
-                "worktree", "add", "--detach", str(worktree_path), tag,
+                "git",
+                "-C",
+                str(clone_path),
+                "worktree",
+                "add",
+                "--detach",
+                str(worktree_path),
+                tag,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
@@ -142,7 +164,9 @@ class GitManager:
                     logger.debug("Worktree already exists (race): %s", worktree_path)
                     return worktree_path
                 logger.error(
-                    "git worktree add failed (rc=%d): %s", proc.returncode, msg,
+                    "git worktree add failed (rc=%d): %s",
+                    proc.returncode,
+                    msg,
                 )
                 return None
 
@@ -174,7 +198,9 @@ class GitManager:
                 check=False,
             )
             if result.returncode != 0:
-                logger.warning("git tag -l failed in %s: %s", clone_path, result.stderr.strip())
+                logger.warning(
+                    "git tag -l failed in %s: %s", clone_path, result.stderr.strip()
+                )
                 return None
         except FileNotFoundError:
             logger.error("git executable not found")

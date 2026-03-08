@@ -7,20 +7,28 @@ logger = logging.getLogger(__name__)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="libsrc-mcp", description="Library source code MCP server")
+    parser = argparse.ArgumentParser(
+        prog="libsrc-mcp", description="Library source code MCP server"
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     serve_parser = subparsers.add_parser("serve", help="Start the MCP server")
     serve_parser.add_argument(
-        "--port", type=int, default=None,
+        "--port",
+        type=int,
+        default=None,
         help="Port to listen on (overrides config file, default: 7890)",
     )
 
     subparsers.add_parser("cleanup", help="Run worktree cleanup")
 
-    install_parser = subparsers.add_parser("install", help="Install libsrc-mcp into AI coding tools")
+    install_parser = subparsers.add_parser(
+        "install", help="Install libsrc-mcp into AI coding tools"
+    )
     install_parser.add_argument(
-        "--port", type=int, default=None,
+        "--port",
+        type=int,
+        default=None,
         help="Port the server runs on (default: from config or 7890)",
     )
 

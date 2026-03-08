@@ -70,7 +70,9 @@ class PoetryEcosystem(Ecosystem):
             return self._parse_lock_file(project_dir, poetry_lock)
         return await self._fallback_poetry_show(project_dir)
 
-    def _parse_lock_file(self, project_dir: Path, poetry_lock: Path) -> list[Dependency]:
+    def _parse_lock_file(
+        self, project_dir: Path, poetry_lock: Path
+    ) -> list[Dependency]:
         with open(poetry_lock, "rb") as f:
             lock_data = tomllib.load(f)
 

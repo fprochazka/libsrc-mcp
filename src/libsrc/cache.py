@@ -32,7 +32,9 @@ class DependencyCache:
                 logger.warning("Failed to read %s for cache hash: %s", path, e)
         return hasher.hexdigest()
 
-    def get(self, project_dir: Path, build_files: list[Path]) -> list[Dependency] | None:
+    def get(
+        self, project_dir: Path, build_files: list[Path]
+    ) -> list[Dependency] | None:
         """Load cached dependencies if available and valid."""
         if not build_files:
             return None

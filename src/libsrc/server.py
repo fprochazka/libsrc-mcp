@@ -5,7 +5,7 @@ from fastmcp import FastMCP
 
 from libsrc.cache import DependencyCache
 from libsrc.config import Config
-from libsrc.ecosystems import Ecosystem, detect_ecosystems
+from libsrc.ecosystems import detect_ecosystems
 from libsrc.git import GitManager
 from libsrc.models import Dependency
 from libsrc.source_resolver import SourceResolver
@@ -85,7 +85,9 @@ def create_server(config: Config) -> FastMCP:
                 cached = dep_cache.get(project_path, build_files)
                 if cached is not None:
                     eco_deps = cached
-                    logger.info("Using cached dependencies for %s (%s)", eco_name, project_dir)
+                    logger.info(
+                        "Using cached dependencies for %s (%s)", eco_name, project_dir
+                    )
                 else:
                     # Resolve dependencies
                     eco_deps = await ecosystem.resolve_dependencies(project_path)
@@ -93,7 +95,9 @@ def create_server(config: Config) -> FastMCP:
                     dep_cache.put(project_path, build_files, eco_deps)
                     logger.info(
                         "Resolved %d dependencies for %s (%s)",
-                        len(eco_deps), eco_name, project_dir,
+                        len(eco_deps),
+                        eco_name,
+                        project_dir,
                     )
 
                 all_deps.extend(eco_deps)
@@ -108,8 +112,13 @@ def create_server(config: Config) -> FastMCP:
 
         # 5. If library_name is specified: filter, resolve sources, clone
         return await _resolve_and_clone(
-            all_deps, library_name, transitive,
-            source_resolver, git_manager, worktree_tracker, config,
+            all_deps,
+            library_name,
+            transitive,
+            source_resolver,
+            git_manager,
+            worktree_tracker,
+            config,
         )
 
     async def _resolve_and_clone(
@@ -130,7 +139,8 @@ def create_server(config: Config) -> FastMCP:
 
         # Substring match on full identifier string
         matches = [
-            d for d in filtered
+            d
+            for d in filtered
             if library_name.lower() in f"{d.identifier}:{d.version}".lower()
         ]
 
@@ -175,11 +185,16 @@ def create_server(config: Config) -> FastMCP:
 
                 # Extract artifact_id for Maven/Gradle tag matching
                 artifact_id: str | None = None
-                if dep.ecosystem.lower() in ("maven", "gradle") and ":" in dep.identifier:
+                if (
+                    dep.ecosystem.lower() in ("maven", "gradle")
+                    and ":" in dep.identifier
+                ):
                     artifact_id = dep.identifier.split(":")[-1]
 
                 # Create worktree
-                worktree_path = await git.create_worktree(clone_path, dep.version, artifact_id)
+                worktree_path = await git.create_worktree(
+                    clone_path, dep.version, artifact_id
+                )
 
                 if worktree_path is not None:
                     tracker.touch(worktree_path)
@@ -196,10 +211,14 @@ def create_server(config: Config) -> FastMCP:
 
         return "\n".join(results)
 
-    def _format_listing(deps_by_ecosystem: dict[str, list[Dependency]], transitive: bool) -> str:
+    def _format_listing(
+        deps_by_ecosystem: dict[str, list[Dependency]], transitive: bool
+    ) -> str:
         """Format the dependency listing when no library_name is specified."""
         lines: list[str] = []
-        lines.append("No library name specified. Libraries will only be cloned when a name is provided.")
+        lines.append(
+            "No library name specified. Libraries will only be cloned when a name is provided."
+        )
         lines.append(f"Detected ecosystem(s): {', '.join(deps_by_ecosystem.keys())}")
         lines.append("")
 

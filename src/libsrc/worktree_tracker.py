@@ -58,8 +58,13 @@ class WorktreeTracker:
                 try:
                     result = subprocess.run(
                         [
-                            "git", "-C", str(repo_path),
-                            "worktree", "remove", "--force", str(worktree_path),
+                            "git",
+                            "-C",
+                            str(repo_path),
+                            "worktree",
+                            "remove",
+                            "--force",
+                            str(worktree_path),
                         ],
                         capture_output=True,
                         text=True,
@@ -68,7 +73,9 @@ class WorktreeTracker:
                     if result.returncode != 0:
                         logger.warning(
                             "git worktree remove failed for %s (rc=%d): %s",
-                            worktree_path, result.returncode, result.stderr.strip(),
+                            worktree_path,
+                            result.returncode,
+                            result.stderr.strip(),
                         )
                 except FileNotFoundError:
                     logger.error("git executable not found")

@@ -36,7 +36,9 @@ def detect_ecosystems(project_dir: Path) -> list[Ecosystem]:
         ecosystems.append(MavenEcosystem())
 
     # Gradle: build.gradle or build.gradle.kts
-    if (project_dir / "build.gradle").is_file() or (project_dir / "build.gradle.kts").is_file():
+    if (project_dir / "build.gradle").is_file() or (
+        project_dir / "build.gradle.kts"
+    ).is_file():
         ecosystems.append(GradleEcosystem())
 
     has_pyproject = (project_dir / "pyproject.toml").is_file()

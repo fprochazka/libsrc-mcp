@@ -9,7 +9,9 @@ class Config:
     output_dir: Path = field(default_factory=lambda: Path("~/devel/libs/").expanduser())
     port: int = 7890
     host: str = "127.0.0.1"
-    trusted_hosts: list[str] = field(default_factory=lambda: ["github.com", "gitlab.com"])
+    trusted_hosts: list[str] = field(
+        default_factory=lambda: ["github.com", "gitlab.com"]
+    )
     deps_dev_cache_ttl: int = 24
 
 

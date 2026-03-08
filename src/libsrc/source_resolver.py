@@ -40,9 +40,7 @@ _GIT_URL_RE = re.compile(
     r"/(?P<repo>[^/.]+)"
 )
 
-_GIT_AT_RE = re.compile(
-    r"^git@(?P<host>[^:]+):(?P<owner>[^/]+)/(?P<repo>[^/.]+)"
-)
+_GIT_AT_RE = re.compile(r"^git@(?P<host>[^:]+):(?P<owner>[^/]+)/(?P<repo>[^/.]+)")
 
 _MAVEN_NS = "{http://maven.apache.org/POM/4.0.0}"
 
@@ -61,7 +59,7 @@ def normalize_repo_url(raw_url: str) -> tuple[str, str] | None:
     # Strip common prefixes
     for prefix in ("scm:git:", "scm:svn:", "scm:"):
         if url.lower().startswith(prefix):
-            url = url[len(prefix):]
+            url = url[len(prefix) :]
             break
 
     # Try git@host:owner/repo.git pattern
@@ -160,7 +158,9 @@ class SourceResolver:
             client = self._get_client()
             response = await client.get(url)
             if response.status_code == 404:
-                logger.debug("deps.dev: package not found: %s %s", dep.identifier, dep.version)
+                logger.debug(
+                    "deps.dev: package not found: %s %s", dep.identifier, dep.version
+                )
                 return None
             response.raise_for_status()
             data = response.json()
@@ -314,7 +314,9 @@ class SourceResolver:
             client = self._get_client()
             response = await client.get(url)
             if response.status_code == 404:
-                logger.debug("PyPI package not found: %s %s", dep.identifier, dep.version)
+                logger.debug(
+                    "PyPI package not found: %s %s", dep.identifier, dep.version
+                )
                 return None
             response.raise_for_status()
             data = response.json()

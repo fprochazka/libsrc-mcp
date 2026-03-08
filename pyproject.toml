@@ -37,4 +37,4 @@ libsrc-mcp = "libsrc.__main__:main"
 packages = ["src/libsrc"]
 
 [dependency-groups]
-dev = ["pytest", "pytest-asyncio"]
+dev = ["pytest", "pytest-asyncio", "ruff"]
