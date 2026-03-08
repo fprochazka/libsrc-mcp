@@ -25,6 +25,9 @@ def main() -> None:
 
         # Use FastMCP's rich logging for all loggers (root, uvicorn, ours)
         configure_logging(level="INFO", logger=logging.getLogger())
+        configure_logging(level="INFO", logger=logging.getLogger("uvicorn"))
+        configure_logging(level="INFO", logger=logging.getLogger("uvicorn.error"))
+        configure_logging(level="INFO", logger=logging.getLogger("uvicorn.access"))
         logging.getLogger("httpx").setLevel(logging.WARNING)
 
         config = load_config()
