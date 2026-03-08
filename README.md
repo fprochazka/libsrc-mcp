@@ -156,3 +156,11 @@ claude mcp add libsrc --transport http http://127.0.0.1:7890/mcp
 ```
 
 See `docs/mcp-auto-install.md` for tool-specific config details (Cursor, Windsurf, Gemini CLI, Codex CLI, Cline, Continue.dev, JetBrains Junie).
+
+## Releasing
+
+1. Bump the version in `pyproject.toml`
+2. Commit and tag: `git tag v<version>`
+3. Push the tag: `git push origin v<version>`
+
+The `publish.yml` GitHub Action builds and publishes to PyPI automatically via trusted publishing.
