@@ -3,7 +3,7 @@ Description=libsrc-mcp - Library Source Code MCP Server
 
 [Service]
 Type=simple
-ExecStart=%h/.local/bin/uvx libsrc-mcp serve
+ExecStart=%h/.local/bin/uvx --refresh libsrc-mcp serve
 Restart=on-failure
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1
