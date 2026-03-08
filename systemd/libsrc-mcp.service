@@ -1,10 +1,9 @@
 [Unit]
-Description=libsrc - Library Source Code MCP Server
-After=network.target
+Description=libsrc-mcp - Library Source Code MCP Server
 
 [Service]
 Type=simple
-ExecStart=%h/.local/bin/libsrc-mcp serve
+ExecStart=%h/.local/bin/uvx libsrc-mcp serve
 Restart=on-failure
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1
