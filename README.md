@@ -2,6 +2,18 @@
 
 An MCP server that resolves project dependencies and provides local source code paths for AI agent inspection. It auto-detects the build system, resolves dependencies, looks up source repositories, clones them, and checks out the correct version as a git worktree -- all in a single tool call.
 
+## Why
+
+AI coding agents work best when they can inspect the source code of libraries used in a project. But getting at those sources is harder than it should be:
+
+- **Published packages are opaque** -- Java distributes compiled JARs, and even when a `-sources.jar` is available, it has to be fetched separately and extracted. Python wheels contain bytecode and stripped metadata. In both cases, getting readable source into the agent's hands is needlessly hard.
+- **Packages lose context** -- Original source repositories often contain documentation, examples, and markdown files that are stripped from published packages.
+- **Exact versions matter** -- Agents need the precise version a project depends on, not "latest" or "close enough". libsrc resolves the exact version from lock files and build tools, then checks out the matching git tag.
+- **Standard tools just work on cloned repos** -- Giving an agent a local path to a git checkout lets it explore with standard file tools, easily and predictably. No JAR extraction, no archive unpacking, no guessing -- just a normal directory of source files.
+- **Parallel-friendly** -- Each version gets its own git worktree, so multiple agents (or the same agent across tasks) can inspect different versions of the same library concurrently without conflicts.
+
+libsrc bridges this gap: one tool call turns a dependency name into a local path the agent can explore immediately.
+
 ## Supported Ecosystems
 
 - **Java**: Maven (`pom.xml`), Gradle (`build.gradle`, `build.gradle.kts`)
